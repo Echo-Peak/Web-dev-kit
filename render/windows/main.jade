@@ -1,0 +1,22 @@
+
+html(ng-app='WDK')
+  head
+    include ../../compiled/load-stylesheets.jade
+    
+    script( type="text/javascript" src='https://cdn.socket.io/socket.io-1.4.5.js')
+    
+  
+  body(ng-controller='mainController as MAIN')
+    .container
+      .project-pannel-container.md-whiteframe-z3
+        include ../modules/pannel/index.jade
+      .controlls-container
+        h2 controll
+        include ../modules/console/console.jade
+    script.
+      let socketIO = io('http://localhost:3000');
+      socketIO.on('reload',e => window.location.reload())
+
+    
+    include ../../compiled/fallbacks.jade
+    script(src='./render.js')

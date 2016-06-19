@@ -1,0 +1,15 @@
+.console-container(ng-controller='consoleController as console')
+  console
+    header
+      h4 Console
+      div(layout='row' layout-align='space-between')
+      
+        md-button(class='md-raised md-primary md-button md-ink-ripple' ng-click='console.toggle()') {{console.button}}
+        md-menu
+          md-button(class='md-raised md-primary md-fab md-mini' ng-click='$mdOpenMenu($event)')
+            i.fa.fa-gear.fa-2x
+            md-tooltip Options
+          md-menu-content
+            console-menu
+    section.console-inner
+    
