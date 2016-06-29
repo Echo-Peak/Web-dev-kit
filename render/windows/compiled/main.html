@@ -1,0 +1,33 @@
+<html ng-app="WDK"><head><script>try{
+  document.write(`<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.css'/>`)
+}catch(e){
+  document.write(`<link rel='stylesheet' href='../compiled/angular-material.min.css'/>`)
+}
+</script><script>try{
+  document.write(`<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'/>`)
+}catch(e){
+  document.write(`<link rel='stylesheet' href='../compiled/FA.min.css'/>`)
+}</script><link rel="stylesheet" href="../compiled/styles.css"/><script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script></head><body ng-controller="mainController as MAIN"><div class="container"><div class="project-pannel-container md-whiteframe-z3"><div class="project-pannel"><header><md-content><section layout="row" layout-align="center center" style="border-right:1px solid #e0e0e0"><md-button md-flex="33" flex="flex" open-project="" class="md-primary"><i style="padding-right:10px;" class="fa fa-facebook"></i><span>Open Project</span></md-button><md-button md-flex="33" flex="flex" new-project=""><i style="padding-right:10px;" class="fa fa-facebook"></i><span>New Project</span></md-button></section></md-content></header><div project-list="" ng-controller="projectList_controller as list" class="project-list"><h4>{{list.checkLocalStorage ? 'Current Projects' : 'Nothing found'}}</h4><md-content></md-content></div></div></div><div class="controlls-container"><h2>controll</h2><div ng-controller="consoleController as console" ng-show="false" class="console-container"><console><header><h4>Console</h4><div layout="row" layout-align="space-between"><md-button ng-click="console.toggle()" class="md-raised md-primary md-button md-ink-ripple">{{console.button}}</md-button><md-menu><md-button ng-click="$mdOpenMenu($event)" class="md-raised md-primary md-fab md-mini"><i class="fa fa-gear fa-2x"></i><md-tooltip>Options</md-tooltip></md-button><md-menu-content><console-menu></console-menu></md-menu-content></md-menu></div></header><section class="console-inner"></section></console></div></div></div><script>let socketIO = io('http://localhost:3000');
+socketIO.on('reload',e => window.location.reload())
+
+</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular.min.js'><\/script>`)
+}</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular-animate.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular-animate.min.js'><\/script>`)
+}</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular-ui-router.min.js'><\/script>`)
+}</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular-material.min.js'><\/script>`)
+}</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular-aria.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular-aria.min.js'><\/script>`)
+}</script><script src="./render.js"></script></body></html>

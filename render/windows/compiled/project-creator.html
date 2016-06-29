@@ -1,0 +1,67 @@
+<html ng-app="project-creator"><head><script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script><link rel="stylesheet" href="../compiled/angular-material.min.css"/><link rel="stylesheet" href="../compiled/FA.min.css"/></head><body ng-controller="mainController as main"><div class="container"><md-toolbar><div class="md-toolbar-tools"><md-button>close</md-button><h3><span>Project Creation (WDK)</span></h3><span flex="flex"> </span><md-button class="md-fab md-mini fa fa-facebook"></md-button></div></md-toolbar><div class="steps"><md-content><md-tabs class="md-dynamic-height md-border-bottom"><md-tab label="Select Project"><md-content><h4>Project name?</h4><md-input-container><label>Project name</label><input ng-model="main.projectName" type="text"/></md-input-container><h4>select a progect root directory</h4><md-button ng-click="main.openDirectory(&quot;src&quot;)">Open Folder</md-button><md-input-container><label>current path</label><input ng-model="main.currentDirectory" type="text"/></md-input-container><h4>select a progect destionion</h4><md-button ng-click="main.openDirectory(&quot;output&quot;)">output Folder</md-button><md-input-container><label>output path</label><input ng-model="main.outputDirectory" type="text"/></md-input-container><h4>type of project?  </h4><div><md-checkbox ng-repeat="type in main.type">{{::type}}</md-checkbox></div><directory-tree>   </directory-tree></md-content></md-tab><md-tab label="Techs"><md-content><h4>Technologys used in this project?</h4><div><md-checkbox ng-repeat="tech in main.techs">{{::tech}}  </md-checkbox></div><section><md-button class="md-primary">Next</md-button></section></md-content></md-tab><md-tab label="Setup build system"><md-content><h4>What build system's to use?</h4><div><md-checkbox ng-repeat="buildSys in main.buildSystems">{{::buildSys}}  </md-checkbox></div></md-content></md-tab><md-tab label="Completeion"><md-content><h4>complete      </h4></md-content></md-tab></md-tabs></md-content></div></div><script src="../compiled/angular.min.js"></script><script src="../compiled/angular-material.min.js"></script><script src="../compiled/angular-animate.min.js"></script><script src="../compiled/angular-aria.min.js"></script><script>let socketIO = io('http://localhost:3000');
+socketIO.on('reload',e => window.location.reload());
+let electron = require('electron');
+
+let projectCreator = angular.module('project-creator',['ngMaterial','ngAria' ,'ngAnimate'])
+.directive('directoryTree',function(){
+  return {
+    restric:'E',
+    template:'snda',
+    link:function(scope ,elm ,attr){
+      
+    }
+  }
+})
+.controller('mainController' , function($scope){
+  this.currentDirectory = process.env.INIT_CWD;
+  this.outputDirectory = process.env.INIT_CWD;
+  this.techs = [
+    'Angular 1x',
+    'Angular 2x',
+    'React',
+    'Vue',
+    'D3',
+    'React Native',
+    'High charts',
+    'JQuery',
+    'Elm',
+    'Knockout'
+  ];
+  this.buildSystems = [
+    'gulp',
+    'webpack',
+    'nodemon',
+    'grunt'
+  ];
+  throw 'i need a better directory structure for dynamic multi instance processes '
+  this.type = [
+    'react',
+    'angular',
+    'express',
+    'nodeJS',
+    'Type Script',
+    "electron",
+    "react Native"
+  ];
+  let whenDone =(type ,dir)=>{
+    
+    if(type == 'src'){
+        $scope.$applyAsync(()=>{
+      this.currentDirectory =dir[0];
+    })
+  }else if(type == 'output'){
+      $scope.$applyAsync(()=>{
+    this.outputDirectory =dir[0];
+    })
+  }
+  
+    console.log(dir)
+  }
+  
+  
+  this.openDirectory = function(type){
+    console.log('click')
+    electron.remote.dialog.showOpenDialog({properties:['openDirectory']} ,whenDone.bind(this,type))
+  }
+
+});</script></body></html>
