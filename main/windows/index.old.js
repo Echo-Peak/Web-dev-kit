@@ -25,6 +25,18 @@ class WindowManager{
     windows['main'].webContents.openDevTools();
 
   }
+  projectCreator(){
+    let options = {
+      width:1400,
+      height:1000,
+      show:false
+    };
+    this.create('project-creator',true ,options ,'main');
+
+  }
+  get(windowName){
+    return windows[windowName]
+  }
   load(windowName){
     try{this[windowName]()}catch(e){}
 
