@@ -1,0 +1,129 @@
+
+html(ng-app='project-creator')
+  head
+    script( type="text/javascript" src='https://cdn.socket.io/socket.io-1.4.5.js')
+    link(rel="stylesheet", href="../compiled/angular-material.min.css")
+    link(rel="stylesheet", href="../compiled/FA.min.css")
+  body(ng-controller='mainController as main')
+    .container33324233d333
+      md-toolbar
+        div.md-toolbar-tools
+          md-button close
+          h3
+            span Project Creation (WDK)
+          span(flex)  
+          md-button(class='md-fab md-mini fa fa-facebook')
+        
+      div.steps
+        md-content
+          md-tabs.md-dynamic-height.md-border-bottom
+            md-tab(label='Select Project')
+              md-content
+                h4 Project name?
+                md-input-container
+                  label Project name
+                  input(ng-model='main.projectName' , type='text')
+                h4 select a progect root directory
+                
+                md-button(ng-click='main.openDirectory("src")') Open Folder
+                md-input-container
+                  label() current path
+                  input(ng-model='main.currentDirectory' , type='text')
+                h4 select a progect destionion
+                md-button(ng-click='main.openDirectory("output")') output Folder
+                md-input-container
+                  label output path
+                  input(ng-model='main.outputDirectory' , type='text')  
+                  
+                h4 type of project?  
+                div
+                  md-checkbox(ng-repeat='type in main.type') {{::type}}
+                directory-tree    
+            md-tab(label='Techs')
+              md-content
+                h4 Technologys used in this project?
+                div
+                  md-checkbox(ng-repeat='tech in main.techs') {{::tech}}  
+                section
+                  md-button(class='md-primary') Next
+            md-tab(label='Setup build system')
+              md-content
+                h4 What build system's to use?
+                div
+                  md-checkbox(ng-repeat='buildSys in main.buildSystems') {{::buildSys}}  
+            md-tab(label='Completeion')
+              md-content
+                h4 complete      
+
+    script(src='../compiled/angular.min.js')
+    script(src='../compiled/angular-material.min.js')
+    script(src='../compiled/angular-animate.min.js')
+    script(src='../compiled/angular-aria.min.js')
+    script.
+      let socketIO = io('http://localhost:3000');
+      socketIO.on('reload',e => window.location.reload());
+      let electron = require('electron');
+      
+      let projectCreator = angular.module('project-creator',['ngMaterial','ngAria' ,'ngAnimate'])
+      .directive('directoryTree',function(){
+        return {
+          restric:'E',
+          template:'snda',
+          link:function(scope ,elm ,attr){
+            
+          }
+        }
+      })
+      .controller('mainController' , function($scope){
+        this.currentDirectory = process.env.INIT_CWD;
+        this.outputDirectory = process.env.INIT_CWD;
+        this.techs = [
+          'Angular 1x',
+          'Angular 2x',
+          'React',
+          'Vue',
+          'D3',
+          'React Native',
+          'High charts',
+          'JQuery',
+          'Elm',
+          'Knockout'
+        ];
+        this.buildSystems = [
+          'gulp',
+          'webpack',
+          'nodemon',
+          'grunt'
+        ];
+        throw 'i need a better directory structure for dynamic multi instance processes '
+        this.type = [
+          'react',
+          'angular',
+          'express',
+          'nodeJS',
+          'Type Script',
+          "electron",
+          "react Native"
+        ];
+        let whenDone =(type ,dir)=>{
+          
+          if(type == 'src'){
+              $scope.$applyAsync(()=>{
+            this.currentDirectory =dir[0];
+          })
+        }else if(type == 'output'){
+            $scope.$applyAsync(()=>{
+          this.outputDirectory =dir[0];
+          })
+        }
+        
+          console.log(dir)
+        }
+        
+        
+        this.openDirectory = function(type){
+          console.log('click')
+          electron.remote.dialog.showOpenDialog({properties:['openDirectory']} ,whenDone.bind(this,type))
+        }
+
+      });
