@@ -1,3 +1,4 @@
+serverCallback();
 var gulp = require('gulp');
 var plumber = require('gulp-plumber');
 var sassify = require('gulp-sass');
@@ -8,83 +9,33 @@ var child_process = require('child_process');
 var jadeify = require('gulp-jade');
 var fs = require('fs');
 var app = require('express')();
-var http = require('http').Server(app);
-var io = socketIO(http);
+var $templateCache = require('gulp-angular-templatecache');
 var gulpSeries = require('gulp-series');
 var path = require('path');
-var renderProcess;
+var backupService = require('./tools/backupService');
 var watch = require('gulp-watch');
-var mainPort = 3000;
-var renderPort = 3550;
+var hostServer = require('./tools/host-server');
+var Server = new hostServer('localhost' , 3000 ,serverCallback.done); //host server for webpack ,  electron , render process
 
 
-  function ioRef(){
-    var s;
-    let actions = {
-      init(socket){
-        s = socket;
-      },
-      get(){
-        return s
-      }
-    }
+function serverCallback(){
 
-    return actions
+  var _done;
+  serverCallback.done = function(){
+    _done();
   }
-let ref = ioRef();
-
-let o = 0;
-function serverSetup(done){
-  io.on('connection', function (socket){
-    o++;
-   console.log('connected');
-   ref.init(socket);
-
-
-   //this is events from webpack & electron!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  socket.on('webpack-reload' ,e =>{
-      socket.emit('reload');
-      socket.broadcast.emit('reload');
-     console.log('reloading')
-   });
-
- socket.on('logger' ,e =>{
-
-    console.log('MSG: -> ' ,e)
-  });
-  socket.on('on-quit', e => {
-
-    socket.broadcast.emit('quit');
-    setTimeout(process.exit ,100);
-  });
-  socket.on('exit', function(){
-    socket.emit('quit');
-    setTimeout(process.exit ,100);
-  });
-  socket.on('restart-electron',function(){
-    child_process.exec('electron main/index.js port='+mainPort);
-  });
-
-process.on('SIGINT' ,function(){
-  console.log('exiting')
-  socket.broadcast.emit('quit');
-  setTimeout(process.exit ,500);
-});
-
-});
-
-http.listen(mainPort, function () {
-
-  console.log('listening on ',mainPort);
-});
-
+  serverCallback.init = function(done){
+    _done = done;
+  }
 }
 
+//must use - in argv
+let backupDest = path.resolve('F:/' ,'website related/app backups/current');
+~process.argv.indexOf('-backup') && new backupService(process.argv[process.argv.indexOf('-backup') + 1],backupDest); //intervals calculated in mins
 
+var _enableServer = true;
+~process.argv.indexOf('-no-server') && (_enableServer = false);
 
-serverSetup()
-
-renderProcess = socketIO.listen(renderPort);
 
 
 
@@ -103,44 +54,29 @@ function plumberHandler(done){
 
 
 
-
-//gulp.task('init' ,['create-local-client','electron' ,'final' , 'jadeify']);
 gulpSeries.registerTasks({
-
-  'create-local-client':createClient,
+  'server':serverCallback.init,
   'jadeify':_jadeify,
   'scss':scss,
   'electron':electron,
   'watches':watches
+
 });
 
-gulpSeries.registerSeries('init',['create-local-client' ,'jadeify' ,'scss' ,'electron' ,'watches'])
+gulpSeries.registerSeries('init',['server' ,'electron' ,'watches']);
 
-child_process.execSync('start webpack');
-
-
-var sock;
-
-function createClient(done){
-
-  renderProcess.on('connection',(sock)=>{
-    sock.emit('connect');
+(process.argv.indexOf('-gulp-only') < 0 ) && child_process.execSync('start webpack');
 
 
-  });
-  setTimeout(done ,3000);
-
-};
 
 function electron(done){
-  child_process.exec('electron main/index.js port='+mainPort);
+  child_process.exec('electron main/index.js port=' + 3000);
   done();
 }
 
 gulp.task('reload',function(done){
-  console.log('reloading')
-  //ref.get().emit('reload');
-  renderProcess.emit('reload')
+  console.log('reloading');
+  Server.getSocket().emit('reload');
   done()
 });
 
@@ -148,19 +84,19 @@ gulp.task('reload',function(done){
 
 gulp.task('restart',function(done){
 
-  ref.get().emit('restart');
+    Server.getSocket().emit('restart');
 
   done();
 });
 function scss(done){
-  var stream = gulp.src('render/modules/**/*.scss')
+  var stream = gulp.src(`render/windows/${scss.src}/**/*.scss`)
   .pipe(plumber(plumberHandler(done)))
   .pipe(sassify())
   .pipe(concat('styles.css'))
-  .pipe(gulp.dest('./compiled'));
+  .pipe(gulp.dest(`render/windows/${scss.src}`));
 stream.on('end' ,function(){
-  ref.get().emit('reload');
- renderProcess.emit('reload')
+      _enableServer && Server.getSocket().emit('reload');
+
   done()
 })
 
@@ -168,26 +104,49 @@ stream.on('end' ,function(){
 
 function _jadeify(done){
 
-    var stream = gulp.src('render/windows/*.jade')
+//use require extentions
+    var stream = gulp.src(_jadeify.src)
     .pipe(plumber(plumberHandler(done)))
     .pipe(jadeify())
     .pipe(plumber())
-    .pipe(gulp.dest('./compiled'));
+    .pipe(gulp.dest(_jadeify.dest));
   stream.on('end' ,function(){
-      ref.get().emit('reload');
-      renderProcess.emit('reload') //REMEBER THIS IS SERVER!!!! i am emiting to client "webpack & electron" of these events
+    _enableServer && Server.getSocket().emit('reload');
+
     done()
   })
 }
 
 
 
+
 function watches(){
-  //  gulp.watch('render/modules/**/*.scss' ,['scss' ,'reload'])
-  //  gulp.watch('render/windows/*.jade' ,['jadeify' ,'reload']);
-  // gulp.watch('./res/**/*' ,['reload']);
-  watch('render/modules/**/*.scss' ,s => gulp.start('scss'));
-  watch(['render/windows/*.jade' ,'render/modules/**/*.jade'] ,s => gulp.start('jadeify'));
+  _jadeify.src = null;
+  let jadePaths = [
+    'render/windows/project-creator/project-creator.jade',
+    'render/windows/project-creator/**/*.jade',
+    'render/windows/main/main.jade',
+    'render/windows/main/**/*.jade'
+  ];
+  let scssPaths = [
+    'render/windows/project-creator/**/*.scss',
+    'render/windows/main/**/*.scss',
+  ];
+
+  watch(jadePaths , (e) =>{
+    _jadeify.src = path.resolve(e.base ,e.relative);
+    _jadeify.dest = path.resolve(e.base ,e.relative).replace(/\w+\.jade$/,'');
+    gulp.start('jadeify');
+  });
+
+  watch('render/windows/**/**/*.scss' ,(e) =>{
+      switch(e.relative.match(/[a-z0-9\-]+/i)[0]){
+        case 'main':scss.src = 'main';break;
+        case 'project-creator':scss.src = 'project-creator';break;
+      }
+      gulp.start('scss');
+  });
+
   watch('res/**/*' ,s => gulp.start('reload'));
   watch('main/**/*' ,s => gulp.start('restart'));
-}
+ }
