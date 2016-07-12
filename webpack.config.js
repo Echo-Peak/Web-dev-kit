@@ -5,22 +5,28 @@ var production = false;
 var colorize = require('colors');
 var enableSourceMaps = false;
 var net = require('net');
+var injectFile = require('webpack-file-injector-plugin');
 var minifyJS = ~process.argv.indexOf('-minify') ? true : false;
-
+injectFile.options({beep:true ,keyword:'File'})
 var port  = 3000;
 
 var io = require('socket.io-client');
 var socket = io.connect('http://localhost:'+port, {reconnect: true});
 
+
+
 socket.on('connect', function (socket) {
     console.log('weback connected!');
 });
-socket.on('quit' ,process.exit);
-process.on('SIGINT' ,function(){
-  socket.emit('exit');
-  socket.emit('quit');
-  setTimeout(process.exit ,500)
+
+socket.on('command-quit' ,function(){
+  console.log("quiting");
+  process.exit();
 });
+socket.on('command-webpack-restart' ,function(){
+  process.exit();
+});
+
 
 var stdin = process.stdin;
 stdin.setRawMode(true);
@@ -33,18 +39,19 @@ stdin.on('data', function ( key) {
      setTimeout(process.exit,200);
    }
    if ( key === '\u0003' ) { // leter ctrl + c
-      process.exit();
+        socket.emit('quit-event');
+        setTimeout(process.exit ,100)
+
     }
 });
 
 module.exports = {
     entry: {
-      'main': path.resolve(path.resolve(__dirname ,'render/windows/main/index')),
-      'projectCreator': path.resolve(path.resolve(__dirname ,'render/windows/project-creator/index'))
+      'main': path.resolve(__dirname ,'app/render/index.js')
     },
     target:'node',
     output: {
-          path:`${__dirname}/render/windows/compiled`,
+          path:`${__dirname}/app/render/compiled`,
         filename: '[name].js'
     },
     cache: true,
@@ -56,7 +63,7 @@ module.exports = {
            {
                test: /\.js$/,
                 exclude: /node_modules/,
-                include: path.resolve(__dirname, 'render'),
+                include: path.resolve(__dirname, 'app/render'),
                loader: 'babel',
                query:{
                    presets:['stage-0' ,'es2015'],
@@ -75,20 +82,20 @@ node:{
   fileSystem:'empty'
 },
 plugins: [
-
+  injectFile.plugin,
     function(){
     this.plugin("done", function(stats){
         if (stats.compilation.errors && stats.compilation.errors.length){
           //prevent gulp > task > INIT from clearing console if theres a error here
           process.env.blockConsole = true;
           //console BEEP
+          socket.emit('logger' ,'WEBPACK ERROR');
           console.log("\007"+stats.compilation.errors[0].error);
 
 
           return
         }
         console.log('press r to reload webpack'.yellow)
-        socket.emit('reload');
         socket.emit('webpack-reload');
     });
 }
@@ -96,11 +103,8 @@ plugins: [
 ],
 
 externals:{
-    electron:'commonjs electron',
-    // react:'commonjs react',
-    // reactDOM:'commonjs react-dom',
-    // ReactRouter:'commonjs react-router',
-    // redux:'commonjs redux',
+    electron:'commonjs electron'
+
 
 }
 
