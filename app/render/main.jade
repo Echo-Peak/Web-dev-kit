@@ -1,0 +1,36 @@
+
+html(ng-app='WDK')
+  head
+    
+    script.
+      try{
+        document.write(`<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'/>`)
+      }catch(e){
+        document.write(`<link rel='stylesheet' href='../compiled/FA.min.css'/>`)
+      }
+    script.
+      try{
+        document.write(`<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.css'/>`)
+      }catch(e){
+        document.write(`<link rel='stylesheet' href='../compiled/angular-material.min.css'/>`)
+      }  
+    script( type="text/javascript" src='https://cdn.socket.io/socket.io-1.4.5.js')
+    
+    link(rel="stylesheet", href="styles.css")
+  body()
+    .container
+      .project-pannel-container.md-whiteframe-z3 
+        project-pannel-ui
+      .controlls-container
+        console-ui
+
+    script.
+      let socketIO = io('http://localhost:3000');
+      socketIO.on('command-reload',(e) => {
+        window.location.reload();
+        console.log('reloading');
+      })
+
+    
+    include compiled/fallbacks.jade
+    script(src='main.js')

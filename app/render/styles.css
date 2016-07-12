@@ -1,0 +1,87 @@
+.console-container {
+  width: 100%;
+  height: 500px;
+  background: #f5f5f5; }
+  .console-container console header h4 {
+    background: #e8e8e8;
+    padding: 5px; }
+  .console-container console section {
+    background: #f0f0f0;
+    width: 100%;
+    height: 400px; }
+
+.project-pannel-container {
+  background: #f5f5f5; }
+
+.project-pannel header {
+  height: 50px;
+  width: 100%;
+  background: white; }
+  .project-pannel header md-content section > button {
+    height: 100%;
+    border-radius: 0;
+    margin: 0; }
+    .project-pannel header md-content section > button:nth-child(1) {
+      border-right: 1px solid #e0e0e0; }
+
+.project-pannel .project-list {
+  margin-top: 10px; }
+
+.project-edit {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  height: 100%;
+  right: 0px;
+  top: 0px;
+  width: 10%;
+  display: none; }
+  .project-edit.shown {
+    display: block; }
+  .project-edit div {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    height: inherit;
+    text-align: center;
+    font-size: 25px; }
+    .project-edit div .delete {
+      flex: 1;
+      order: 1; }
+      .project-edit div .delete i {
+        margin-top: 10px; }
+      .project-edit div .delete:hover {
+        background: #f14646; }
+    .project-edit div .edit {
+      flex: 1;
+      order: 2; }
+      .project-edit div .edit i {
+        margin-top: 10px; }
+      .project-edit div .edit:hover {
+        background: #4d7bd4; }
+
+body, html {
+  font-size: 16px; }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  transition: all .4s; }
+
+.container {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex; }
+  .container .project-pannel-container {
+    flex: 1;
+    order: 1; }
+  .container .controlls-container {
+    flex: 3;
+    order: 2; }
+
+md-list {
+  padding: 0; }

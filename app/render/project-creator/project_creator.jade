@@ -1,0 +1,39 @@
+
+html(ng-app='project-creator')
+  head
+    script( type="text/javascript" src='https://cdn.socket.io/socket.io-1.4.5.js')
+    link(rel="stylesheet", href="../compiled/angular-material.min.css")
+    link(rel="stylesheet", href="../compiled/FA.min.css")
+    link(rel="stylesheet", href="styles.css")
+  body(ng-controller='ProjectController as Project')
+    .container
+      md-toolbar
+        div.md-toolbar-tools
+          md-button(ng-click='Project.exit()') close
+          h3
+            span Project Creation (WDK)
+          span(flex)  
+        
+      div.steps
+        md-content
+          md-tabs.md-dynamic-height.md-border-bottom
+            md-tab(label='Select Project')
+              project-description.project-description
+              
+            md-tab(label='Techs' ,ng-if='Project.next.is && Project.next.current > 1')
+             //project-description
+              
+            md-tab(label='Setup build system' ,ng-if='Project.next.is && Project.next.current > 2')
+              //project-description
+              
+            md-tab(label='Completeion' ,ng-if='Project.next.is && Project.next.current > 3')
+              //project-description  
+    script.
+        let socketIO = io('http://localhost:3000');
+        socketIO.on('command-reload',(e) =>{ window.location.reload()});
+    script(src='../compiled/angular.min.js')
+    script(src='../compiled/angular-material.min.js')
+    script(src='../compiled/angular-animate.min.js')
+    script(src='../compiled/angular-aria.min.js')
+    
+    script(src='../compiled/projectCreator.js')

@@ -1,0 +1,19 @@
+.project-description .sec-1 md-input-container {
+  width: 40%; }
+
+.project-pannel-container {
+  background: #f5f; }
+
+.project-pannel header {
+  height: 50px;
+  width: 100%;
+  background: white; }
+  .project-pannel header md-content section > button {
+    height: 100%;
+    border-radius: 0;
+    margin: 0; }
+    .project-pannel header md-content section > button:nth-child(1) {
+      border-right: 1px solid #e0e0e0; }
+
+.project-pannel .project-list {
+  margin-top: 10px; }

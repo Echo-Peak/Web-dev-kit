@@ -1,0 +1,49 @@
+md-content
+  form(action="")
+  
+    section.sec-1(layout='row' ,layout-padding)
+      div(flex)
+        h4 Project name
+        div(layout='row')
+          md-input-container(flex='50')
+            label Enter your project name
+            input(type="text" ,md-maxlength='32' , ng-model='Project.form.models.name' ,required )
+      div(flex )
+        h4 Start with version
+        div(layout='row')
+          md-input-container(flex='50')
+            label *Optional
+            input(type="text")
+          
+    section.sec-2   
+      div
+        h4 Authours
+        md-chips(ng-model='Project.form.models.authours' , name='Authours' , readonly="ctrl.readonly" md-max-chips="10" )
+          md-chip-template
+            strong {{$chip}}
+    section.sec-3(layout = 'row' , layout-padding)               
+      div(flex)
+        h4 Select project source path
+        div(layout='row')
+          md-input-container(flex='95')
+            label Source
+            input(type="text"  required, md-maxlength="150" , ng-model='Project.form.models.source')
+        
+      div(flex)
+        h4 Select project output path
+        div(layout='row')
+          md-input-container(flex='95')
+            label Destination
+            input(type="text", required ,md-maxlength="150" ,ng-model='Project.form.models.dest')
+    section 
+      md-button(class='md-primary' , ng-click='Project.browse()') Browse
+          
+    md-divider
+    section.sec-4
+      h4 project type , chose one
+      div(layout = 'row')
+        div(ng-repeat='type in Project.form.enums.type', flex, style='height:320px').type-row-item
+            md-button(ng-click='Project.setProjectType(type.type); Project.nextStep(type.type)' , layout-fill)
+              h4 {{type.title}}
+              img(ng-src='{{type.img}}', alt="").type-img
+            

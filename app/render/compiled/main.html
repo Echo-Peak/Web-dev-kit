@@ -1,0 +1,35 @@
+<html ng-app="WDK"><head><script>try{
+  document.write(`<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'/>`)
+}catch(e){
+  document.write(`<link rel='stylesheet' href='../compiled/FA.min.css'/>`)
+}</script><script>try{
+  document.write(`<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.css'/>`)
+}catch(e){
+  document.write(`<link rel='stylesheet' href='../compiled/angular-material.min.css'/>`)
+}  </script><script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script><link rel="stylesheet" href="styles.css"/></head><body><div class="container"><div class="project-pannel-container md-whiteframe-z3"> <project-pannel-ui></project-pannel-ui></div><div class="controlls-container"><console-ui></console-ui></div></div><script>let socketIO = io('http://localhost:3000');
+socketIO.on('command-reload',(e) => {
+  window.location.reload();
+  console.log('reloading');
+})
+
+</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular.min.js'><\/script>`)
+}</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular-animate.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular-animate.min.js'><\/script>`)
+}</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular-ui-router.min.js'><\/script>`)
+}</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular-material.min.js'><\/script>`)
+}</script><script>try{
+  document.write(`<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular-aria.min.js'><\/script>`)
+}catch(e){
+  document.write(`<script src='../compiled/angular-aria.min.js'><\/script>`)
+}</script><script src="main.js"></script></body></html>
