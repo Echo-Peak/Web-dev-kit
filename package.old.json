@@ -1,0 +1,48 @@
+{
+    "name": "web-dev-kit",
+    "version": "0.1.0",
+    "description": "Generate build systems and manage them using one interface",
+    "scripts": {
+        "generate": "node tools/generate-src.s",
+        "start": "gulp init",
+        "merge": "node tools/merge.js",
+        "postinstall": "node tools/install-platfom-installer.js"
+    },
+    "author": "Michael Wheeler",
+    "license": "Apache License",
+    "dependencies": {
+        "angular": "~1.5.0",
+        "angular-material": "*",
+        "angular-ui-router": "*",
+        "angular-aria": "*",
+        "angular-animate": "*",
+        "font-awesome": "*"
+    },
+    "devDependencies": {
+        "electron-builder": "*",
+        "electron-prebuilt": "~1.2.2",
+        "socket.io": "*",
+        "webpack": "*",
+        "webpack-file-injector-plugin": "*",
+        "gulp": "*",
+        "gulp-plumber": "*",
+        "gulp-sass": "*",
+        "socket.io-client": "*",
+        "gulp-jade": "*",
+        "express": "*",
+        "gulp-watch": "*",
+        "colors": "*",
+        "gulp-concat": "*"
+    },
+    "build": {
+        "appId": "WDK-f85336",
+        "productName": "Web Dev Kit",
+        "app-category-type": "entertainement",
+        "win": {
+            "icon": "https://f4.bcbits.com/img/a3852017470_7.jpg",
+            "loadingGif": "https://f4.bcbits.com/img/a3852017470_7.jpg",
+            "msi": false,
+            "target": "squirrel"
+        }
+    }
+}
