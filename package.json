@@ -7,7 +7,9 @@
         "start": "gulp init",
         "merge": "node scripts/merge.js",
         "packager":"node scripts/packager.js",
-        "postinstall": "node scripts/install-platfom-installer.js"
+        "postinstall": "node scripts/install-platfom-installer.js",
+        "host":"node scripts/firebase-hosting.js",
+        "backup":"node scripts/backup-service.js npm"
     },
     "author": "Michael Wheeler",
     "license": "Apache License",
@@ -20,6 +22,7 @@
         "font-awesome": "*"
     },
     "devDependencies": {
+      "node-localdb":"*",
         "electron-builder": "*",
         "electron-prebuilt": "~1.2.2",
         "socket.io": "*",
