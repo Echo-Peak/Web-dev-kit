@@ -17,20 +17,25 @@ html(ng-app='WDK')
     script( type="text/javascript" src='https://cdn.socket.io/socket.io-1.4.5.js')
     
     link(rel="stylesheet", href="styles.css")
-  body()
-    .container
-      .project-pannel-container.md-whiteframe-z3 
-        project-pannel-ui
-      .controlls-container
-        console-ui
-
+  body
+    .container(ui-view='' ,class='view-page-transition' , ng-cloak)
+        
     script.
       let socketIO = io('http://localhost:3000');
       socketIO.on('command-reload',(e) => {
         window.location.reload();
         console.log('reloading');
-      })
+      });
+      
 
     
     include compiled/fallbacks.jade
+    script(src='https://www.gstatic.com/firebasejs/3.2.0/firebase.js')
+    script.
+      var config = {
+      apiKey: "AIzaSyBlbivfTeA-ke0OuUHP014_yYGzlVGB7Ls",
+      authDomain: "web-dev-kit.firebaseapp.com",
+      databaseURL: "https://web-dev-kit.firebaseio.com"
+      };
+      firebase.initializeApp(config);
     script(src='main.js')
