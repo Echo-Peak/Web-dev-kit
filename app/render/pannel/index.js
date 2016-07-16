@@ -6,12 +6,11 @@ import projectPannelUi from './project-pannel';
 import PannelController from './main-controller';
 import projectList from './project-list';
 
-console.log('sss')
 
 export let projectPannel = angular.module('project-pannel',[])
 //COMPILEd
-.directive('projectList',['$compile',projectList])
-.controller('PannelController',['$scope',PannelController])
+.directive('projectList',['$compile','$storage',projectList])
+.controller('PannelController',['$scope','$state',PannelController])
 .directive('projectPannelUi',projectPannelUi)
 .directive('projectEdit',projectEdit);
 
