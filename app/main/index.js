@@ -1,27 +1,17 @@
 'use strict';
-let WINDOWS = {
-  main:require('./windows/main-window'),
-  create:function(_server){
-    let keys = Object.keys(WINDOWS);
-    keys.forEach(function(_window){
-      if(_window === 'create'){
-        return
-      }
 
-    WINDOWS[_window]  = WINDOWS[_window](_server);
-    })
-  }
-};
+let path =require('path');
 
-const Server = require('./tools/server');
+const _paths_ = require('./util/paths')();
+const Server = require(_paths_.server);
 Server.connect(3000);
 const electron = require('electron');
 const app = electron.app;
-const setJumpList = require('./jump-list');
-const {BrowserWindow} = electron;
-const path = require('path');
-const ipc  = require('./tools/ipc-server');
-process.env._windowDir = path.resolve(process.cwd() ,'render/compiled');
+const setJumpList = require(_paths_.jumpList);
+
+const ipc  = require(_paths_.ipcServer);
+let windowCreator = require(_paths_.windowCreator);
+
 
 app.setName('Web developer Kit(WDK)');
 app.setUserTasks(setJumpList);
@@ -29,19 +19,11 @@ app.setUserTasks(setJumpList);
 
 
 app.on('ready', function(){
-  WINDOWS.create(Server.getSocket());
 
-  WINDOWS.main.loadURL(process.env._windowDir +'/main.html');
-  ipc(WINDOWS , Server.getSocket());
+  let mainWindow = windowCreator.load('main');
 
 
-  WINDOWS.main.on('close' , function(){
-
-    Server.getSocket().emit('quit-event');
-    Server.getSocket().emit('logger' ,'exiting');
-
-  });
-
+//  ipc(WINDOWS , Server.getSocket());
 
 });
 
