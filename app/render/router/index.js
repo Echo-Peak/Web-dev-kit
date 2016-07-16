@@ -1,16 +1,19 @@
 let home = {
   url:'/',
-  view:{
-    '@':{
-      template:'nothing'
-    }
-  }
+  templateUrl:'../ui/view/main.html'
+}
+
+let projectCreator = {
+  url:'/projectCreator',
+  templateUrl:'../ui/view/project-creator.html'
 }
 
 
-export let Router = angular.module('router',['ui.router'])
-.config(['$stateProvider','$urlRouteProvider',function($state ,$url){
+export let Router =  angular.module('router',['ui.router'])
+.config(['$stateProvider','$urlRouterProvider',function($state ,$url){
+  console.log('ran');
   $url.otherwise('/');
   $state
-  .state(home);
+  .state('home',home)
+  .state('project-creator',projectCreator)
 }])
