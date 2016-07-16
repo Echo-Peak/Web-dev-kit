@@ -1,0 +1,22 @@
+div(ng-controller='projectCreatorController as Project')
+  md-toolbar
+    div.md-toolbar-tools
+      md-button(ui-sref='home') Back
+      h3
+        span Project Creation (WDK)
+      span(flex)  
+    
+  div.steps
+    md-content
+      md-tabs.md-dynamic-height.md-border-bottom
+        md-tab(label='Select Project')
+          project-description.project-description
+          
+        md-tab(label='setup Architecture')
+         //project-description
+          
+        md-tab(label='setup build system')
+          //project-description
+          
+        md-tab(label='Completeion')
+          //project-description  
