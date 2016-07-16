@@ -3,12 +3,16 @@ const path = require('path');
 const CSON = require('cson');
 const fsX = require('fs-extra');
 
-let deps = CSON.load('./deps.cson');
+let rootPath = process.cwd();
+let resolvePath = e => path.resolve(e);
+
+let deps = CSON.load(resolvePath(`${rootPath}/deps.cson`));
 const angularDeps = Object.keys(deps.angular);
 const otherDeps = Object.keys(deps.other);
 
 
-let dest = `${process.cwd()}/render/compiled`;
+let dest = resolvePath(`${rootPath}/app/render/compiled`);
+
 let node_modules = function(currentRootDir) {
 
   let dirlist = fs.readdirSync(currentRootDir);
@@ -24,7 +28,7 @@ let node_modules = function(currentRootDir) {
     return node_modules(parent);
 
 }
-node_modules = `${node_modules(__dirname)}\\node_modules`;
+node_modules = `${node_modules(rootPath)}\\node_modules`;
 
 
 function destDirlist(){
@@ -50,8 +54,7 @@ function destDirlist(){
 
 }
 destDirlist()
-//
-// fs.readdir(__dirname+'/compiled' ,getDirList);
+
  let stream;
  let _contents_= '';
 
@@ -71,46 +74,3 @@ function createStream(depPath ,filename){
 
 
 }
-//
-//
-//
-// function firstRun(){
-//   angularDeps.forEach(function(file){
-//     let depPath = path.resolve(process.cwd() ,deps.angular[file]);
-//     createStream(depPath , file);
-//   })
-//
-// }
-//
-// function getDirList(err, dirlist){
-//   let withoutExt = dirlist.map(e => e.replace(/\.[a-z]+$/,''));
-//
-// if(dirlist.length === 0){
-//     firstRun();
-//   }else{
-//     //ANGULAR DEPS
-//     angularDeps.forEach(function(filename ,index){
-//
-//       if(~withoutExt.indexOf(filename)){return}
-//       console.log('Compiling -> ' ,filename);
-//       createStream(deps.angular[filename] ,filename);
-//
-//     });
-//     //your deps
-//
-//     otherDeps.forEach(function(filename){
-//
-//       if(~withoutExt.indexOf(filename)){ return }
-//       console.log('Compiling -> ' ,filename);
-//       createStream(deps.other[filename] ,filename);
-//
-//     });
-//
-//
-//
-//
-//   }
-//
-//
-//
-// }

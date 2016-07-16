@@ -33,7 +33,7 @@ module.exports = class HostServer{
 
       x = setTimeout(function(){
         console.log('ELECTRON HAS BEEN RESTARTED')
-        child_process.exec('electron main/index.js');
+        child_process.exec('electron app/main/index.js');
       },1000);
 
     });
