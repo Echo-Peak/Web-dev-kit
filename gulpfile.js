@@ -71,7 +71,7 @@ function plumberHandler(done){
 }
 
 gulp.task('init' ,['injectDeps','server' ,'scss','jadeify','electron' ,'watches']);
-gulp.task('inject-deps',injectDeps);
+gulp.task('injectDeps',injectDeps);
 gulp.task('server',serverCallback.init);
 gulp.task('scss',scss);
 gulp.task('jadeify',_jadeify);
@@ -80,7 +80,7 @@ gulp.task('watches',watches);
 
 
 function injectDeps(){
-  child_process.fork('./scripts/update-deps');
+  child_process.fork('./scripts/update-deps',[process.cwd()]);
 }
 
 function electron(done){
@@ -111,12 +111,13 @@ gulp.task('restart',function(done){
 
 });
 function scss(done){
-  var stream = gulp.src(`app/render/windows/${scss.src}/**/*.scss`)
+
+  return gulp.src(`app/render/**/view/*.scss`)
   .pipe(plumber(plumberHandler(done)))
   .pipe(sassify())
   .pipe(concat('styles.css'))
-  .pipe(gulp.dest(`app/render/windows/${scss.src}`));
-stream.on('end' ,function(){
+  .pipe(gulp.dest(`app/render/compiled`))
+  .on('end' ,function(){
 
       try{
         _enableServer && client.emit('external-reload');
@@ -128,12 +129,12 @@ stream.on('end' ,function(){
 }
 
 function _jadeify(done){
-
-    return gulp.src(_jadeify.src || 'app/render/main.jade')
+    let src = (_jadeify.src || 'app/render/main.jade');
+    return gulp.src(src)
     .pipe(plumber(plumberHandler(done)))
     .pipe(jadeify())
     .pipe(plumber())
-    .pipe(gulp.dest(_jadeify.dest || './app/render/compiled'))
+    .pipe(gulp.dest(_jadeify.dest || 'app/render/compiled'))
     .on('end' ,function(){
     try{
       _enableServer && client.emit('external-reload');
@@ -158,10 +159,10 @@ function watches(){
     _jadeify.src = path.resolve(e.base ,e.relative);
 
     switch(e.relative){
-      case 'main.jade':{_jadeify.dest = path.resolve(__dirname ,'render/compiled')};break;
+      case 'main.jade':{_jadeify.dest = path.resolve(__dirname ,'app/render/compiled')};break;
       default:{
         let x = e.relative.split('\\');
-        _jadeify.dest = path.resolve(__dirname , `render/${x[0]}/view`);
+        _jadeify.dest = path.resolve(__dirname , `app/render/${x[0]}/view`);
       }
     }
    gulp.start('jadeify');
