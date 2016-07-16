@@ -5,14 +5,13 @@ var production = false;
 var colorize = require('colors');
 var enableSourceMaps = false;
 var net = require('net');
-var injectFile = require('webpack-file-injector-plugin');
+
+const Server = require('./scripts/client-server');
+Server.connect(3000);
+let socket = Server.getSocket();
+
+
 var minifyJS = ~process.argv.indexOf('-minify') ? true : false;
-injectFile.options({beep:true ,keyword:'File'})
-var port  = 3000;
-
-var io = require('socket.io-client');
-var socket = io.connect('http://localhost:'+port, {reconnect: true});
-
 
 
 socket.on('connect', function (socket) {
@@ -82,7 +81,6 @@ node:{
   fileSystem:'empty'
 },
 plugins: [
-  injectFile.plugin,
     function(){
     this.plugin("done", function(stats){
         if (stats.compilation.errors && stats.compilation.errors.length){
