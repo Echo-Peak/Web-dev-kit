@@ -4,6 +4,6 @@ export default function(){
 
   return{
     restric:'E',
-    template:loadTemplate('console','index')
+    template:require('raw!./view/index.html')
   }
 }
