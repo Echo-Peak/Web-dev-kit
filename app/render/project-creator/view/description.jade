@@ -1,0 +1,60 @@
+md-content
+  div(layout='column')
+    section(layout='row' ,flex='60')
+      div(flex ,layout-padding)
+        section()
+          h4 Select destination:
+          div(layout='row')
+            md-input-container(flex='50')
+              label Enter path
+              input(type="text")
+          md-button.md-primary  browse
+        section
+          h4 Github repository
+          div(layout='row')
+            md-input-container(flex='50')
+              label Enter repository name
+              input(type="text" , ng-model='Project.models.github')
+          md-button.md-primary(ng-click='Project.createRepo()') create
+          md-button(ng-click='Project.clone(Project.models.github)') clone
+          md-button(ng-click='Project.checkAuth()') link
+        section
+          h4 Other:
+          md-radio-group(ng-model='Project.stuff')
+            md-checkbox include package.json
+            md-checkbox include .gitignore
+            md-checkbox include bower.json
+      div(flex ,layout-padding)
+        section
+          h4 Project Name:
+          div(layout='row')
+            md-input-container(flex)
+              label enter your project name
+              input(type="text")
+        section
+          h4 Scripts:
+          div(layout='row')
+            md-input-container(flex)
+              label main.js
+              input(type="text")
+        section
+          h4 Version:
+          div(layout='row')
+            md-input-container(flex)
+              label Default V0.0.0
+              input(type="text")
+        section
+          h4 Authours:
+          div(layout='row')
+            md-chips(ng-model='Project.form.models.authours' , name='Authours' , md-max-chips="10" ,flex)
+              md-chip-template
+                strong {{$chip}}
+          md-button.md-primary(ng-click='Project.form.models.authours = []')  clear
+    section(layout='row')
+      div(layout='row', flex='100')
+          div(ng-repeat='type in Project.enums.type', flex, style='height:286px').type-row-item
+              md-button(ng-click='Project.step(1 ,type.type)' , layout-fill)
+                h4 {{type.title}}
+                img(ng-src='{{type.img}}', alt="" height='250').type-img
+            
+  

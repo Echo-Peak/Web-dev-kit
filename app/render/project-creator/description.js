@@ -1,8 +1,8 @@
-import loadTemplate from '../services/loadTemplate';
+
 export default function(){
   return {
     restric:'E',
-    template:loadTemplate('views' ,'project_description'),
+    template:require('raw!./view/description.html'),
     link(scope , elm ,attr){
       // let inputs = Array.apply(0,elm[0].querySelectorAll('input'))
       // .reduce((start , item)=>{
@@ -10,7 +10,7 @@ export default function(){
       //   return start
       // } ,{});
       // let path = scope.Project.destination;
-      // 
+      //
       //
       //
       // inputs.name.addEventListener('keyup' ,function(){
