@@ -2,13 +2,13 @@
     "name": "web-dev-kit",
     "version": "0.1.0",
     "description": "Generate build systems and manage them using one interface",
+    "website":"https://web-dev-kit.firebaseapp.com/",
     "scripts": {
         "generate": "node scripts/generate-src.s",
         "start": "gulp init",
         "merge": "node scripts/merge.js",
         "packager":"node scripts/packager.js",
         "postinstall": "node scripts/install-platfom-installer.js",
-        "host":"node scripts/firebase-hosting.js",
         "backup":"node scripts/backup-service.js npm"
     },
     "author": "Michael Wheeler",
@@ -36,7 +36,8 @@
         "express": "*",
         "gulp-watch": "*",
         "colors": "*",
-        "gulp-concat": "*"
+        "gulp-concat": "*",
+        "cson":"*"
     },
     "build": {
         "appId": "WDK-f85336",
